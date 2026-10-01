@@ -1,8 +1,11 @@
 <?php
 
+use App\Enums\AccountType;
 use App\Models\User;
+use App\Rules\Cpf;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Livewire\Attributes\Layout;
@@ -11,6 +14,7 @@ use Livewire\Volt\Component;
 new #[Layout('components.layouts.auth')] class extends Component {
     public string $name = '';
     public string $email = '';
+    public string $cpf = '';
     public string $password = '';
     public string $password_confirmation = '';
 
@@ -19,15 +23,34 @@ new #[Layout('components.layouts.auth')] class extends Component {
      */
     public function register(): void
     {
+        // RN-04: normaliza ANTES de validar, para o unique comparar só dígitos.
+        $this->cpf = preg_replace('/\D/', '', $this->cpf);
+
         $validated = $this->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'cpf' => ['required', new Cpf, 'unique:accounts,document'],
             'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $validated['password'] = Hash::make($validated['password']);
+        // RN-01: User e conta PF na mesma transação. Se um falhar, nada é gravado.
+        $user = DB::transaction(function () use ($validated) {
+            $user = User::create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'password' => Hash::make($validated['password']),
+            ]);
 
-        event(new Registered(($user = User::create($validated))));
+            $user->accounts()->create([
+                'type' => AccountType::Individual,
+                'name' => $validated['name'],
+                'document' => $validated['cpf'],
+            ]);
+
+            return $user;
+        });
+
+        event(new Registered($user));
 
         Auth::login($user);
 
@@ -50,6 +73,11 @@ new #[Layout('components.layouts.auth')] class extends Component {
         <!-- Email Address -->
         <div class="grid gap-2">
             <flux:input wire:model="email" id="email" label="{{ __('Email address') }}" type="email" name="email" required autocomplete="email" placeholder="email@example.com" />
+        </div>
+
+        <!-- CPF -->
+        <div class="grid gap-2">
+            <flux:input wire:model="cpf" id="cpf" label="CPF" type="text" name="cpf" required inputmode="numeric" placeholder="000.000.000-00" />
         </div>
 
         <!-- Password -->
