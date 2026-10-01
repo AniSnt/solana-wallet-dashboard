@@ -29,4 +29,18 @@ class Account extends Model
             ->withPivot('label')
             ->withTimestamps();
     }
+
+    public function maskedDocument(): string
+    {
+        $d = $this->document;
+
+        if (strlen($d) === 11) {
+            // CPF: 529.***.***-25
+            return substr($d, 0, 3) . '.***.***-' . substr($d, -2);
+        }
+
+        // CNPJ: 11.222.***/****-81
+        return substr($d, 0, 2) . '.' . substr($d, 2, 3) . '.***/****-' . substr($d, -2);
+    }
 }
+

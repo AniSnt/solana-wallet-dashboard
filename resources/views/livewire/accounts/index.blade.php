@@ -24,7 +24,7 @@ new class extends Component {
                     <p class="font-medium">{{ $account->name }}</p>
                     <p class="text-sm text-zinc-500">
                         {{ $account->type === AccountType::Individual ? 'PF' : 'PJ' }}
-                        · {{ $account->document }}
+                        · {{ $account->maskedDocument() }}
                     </p>
                 </div>
             </li>
