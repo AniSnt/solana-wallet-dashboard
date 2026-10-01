@@ -52,6 +52,7 @@ new class extends Component {
                         · {{ $account->maskedDocument() }}
                     </p>
                 </div>
+                <a href="{{ route('accounts.wallets', $account) }}" wire:navigate class="text-sm underline">Wallets</a>
             </li>
         @endforeach
     </ul>
