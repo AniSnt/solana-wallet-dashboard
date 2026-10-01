@@ -13,14 +13,14 @@ class Cpf implements ValidationRule
 
         // 1. rejeita se não tiver exatamente 11 dígitos
         if (strlen($digits) !== 11) {
-            $fail('CPF inválido.');
+            $fail('Invalid CPF');
 
             return;
         }
 
         // 2. rejeita sequências repetidas como 11111111111
         if (preg_match('/^(\d)\1{10}$/', $digits)) {
-            $fail('CPF inválido.');
+            $fail('Invalid CPF');
 
             return;
         }
@@ -36,7 +36,7 @@ class Cpf implements ValidationRule
             $check = ($sum * 10) % 11 % 10;
 
             if ((int) $digits[$t] !== $check) {
-                $fail('CPF inválido.');
+                $fail('Invalid CPF');
 
                 return;
             }

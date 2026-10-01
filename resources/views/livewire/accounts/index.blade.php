@@ -1,16 +1,41 @@
 <?php
 
 use App\Enums\AccountType;
+use App\Rules\Cnpj;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\Computed;
 use Livewire\Volt\Component;
 
 new class extends Component {
+    public string $name = '';
+    public string $cnpj = '';
+
     #[Computed]
     public function accounts(): Collection
     {
         // Sempre parte do usuário logado, nunca de Account::all() (RN-09).
         return auth()->user()->accounts()->orderByDesc('type')->orderBy('name')->get();
+    }
+
+    public function createCompany(): void
+    {
+        // RN-04: normaliza ANTES de validar, para o unique comparar só dígitos.
+        $this->cnpj = preg_replace('/\D/', '', $this->cnpj);
+
+        $validated = $this->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'cnpj' => ['required', new Cnpj, 'unique:accounts,document'],
+        ]);
+
+        // O user_id nunca vem do formulário: a conta nasce do usuário logado (RN-09).
+        auth()->user()->accounts()->create([
+            'type' => AccountType::Company,
+            'name' => $validated['name'],
+            'document' => $validated['cnpj'],
+        ]);
+
+        $this->reset(['name', 'cnpj']);
+        unset($this->accounts);
     }
 }; ?>
 
@@ -30,4 +55,10 @@ new class extends Component {
             </li>
         @endforeach
     </ul>
+
+    <form wire:submit="createCompany" class="flex flex-col gap-4">
+        <flux:input wire:model="name" label="Razão social" type="text" required />
+        <flux:input wire:model="cnpj" label="CNPJ" type="text" inputmode="numeric" placeholder="00.000.000/0000-00" required />
+        <flux:button type="submit" variant="primary">Criar conta PJ</flux:button>
+    </form>
 </div>

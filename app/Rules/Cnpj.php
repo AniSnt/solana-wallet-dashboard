@@ -13,14 +13,14 @@ class Cnpj implements ValidationRule
 
         // 1. rejeita se não tiver exatamente 14 dígitos
         if (strlen($digits) !== 14) {
-            $fail('CNPJ inválido.');
+            $fail('Invalid CNPJ');
 
             return;
         }
 
         // 2. rejeita sequências repetidas (00000000000000, 11111111111111...)
         if (preg_match('/^(\d)\1{13}$/', $digits)) {
-            $fail('CNPJ inválido.');
+            $fail('Invalid CNPJ');
 
             return;
         }
@@ -41,7 +41,7 @@ class Cnpj implements ValidationRule
             $expected = $rest < 2 ? 0 : 11 - $rest;
 
             if ((int) $digits[12 + $index] !== $expected) {
-                $fail('CNPJ inválido.');
+                $fail('Invalid CNPJ');
 
                 return;
             }
