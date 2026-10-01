@@ -1,0 +1,6 @@
+{ "success": true, "data": [
+  { "token_account": "BW4bvMP129TtQkMKFebCqMA7ZC4jBop4yW8PHgTr6u8Z", "token_address": "9LbdhSersRjbkcWWdd4Xpgr8ADi16dwzMU1tM1Ddsq79",
+    "amount": 12000000000000, "amount_str": "12000000000000", "token_decimals": 4, "owner": "GThUX1Atko4tqhN2NaiTazWSeFWMuiUvfFnyJyUghFMJ" },
+  { "token_account": "7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU", "token_address": "So11111111111111111111111111111111111111112",
+    "amount": 99999999999999999999, "amount_str": "99999999999999999999", "token_decimals": 6, "owner": "GThUX1Atko4tqhN2NaiTazWSeFWMuiUvfFnyJyUghFMJ" }
+] }
