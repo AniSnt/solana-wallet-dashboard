@@ -20,6 +20,7 @@ Route::middleware(['auth'])->group(function () {
 
     Volt::route('accounts', 'accounts.index')->name('accounts.index');
     Volt::route('accounts/{account}/wallets', 'accounts.wallets')->name('accounts.wallets');
+    Volt::route('accounts/{account}/wallets/{wallet}', 'accounts.wallet')->name('accounts.wallet');
 });
 
 require __DIR__.'/auth.php';
