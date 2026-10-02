@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-    
-      Schema::create('account_wallet', function (Blueprint $table) {
+
+        Schema::create('account_wallet', function (Blueprint $table) {
             $table->id();
 
             // Conta dona do vínculo. Se a conta for apagada, seus vínculos somem.
@@ -30,6 +30,7 @@ return new class extends Migration
             $table->unique(['account_id', 'wallet_id']);
         });
     }
+
     public function down(): void
     {
         Schema::dropIfExists('account_wallet');
