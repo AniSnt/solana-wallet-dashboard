@@ -69,7 +69,7 @@ new class extends Component {
     <form wire:submit="createCompany" class="flex flex-col gap-4 rounded-xl border border-zinc-200 p-5 dark:border-zinc-700">
                 <div class="page-heading">
             <h2 class="font-semibold">Nova conta PJ</h2>
-            <p class="text-sm text-zinc-500">Informe a razão social e o CNPJ, com ou sem máscara.</p>
+            <p class="text-sm text-zinc-500">Informe a razão social e o CNPJ.</p>
         </div>
 
         <flux:input wire:model="name" label="Razão social" type="text" required />
