@@ -16,6 +16,8 @@ Entre em `/login` com `demo@example.com` / `password` e abra `/accounts`.
 
 O padrão é `SOLSCAN_DRIVER=fake`, que lê as fixtures de `tests/Fixtures/solscan`. Para usar a API real, defina `SOLSCAN_DRIVER=solscan` e `SOLSCAN_API_KEY` no `.env`. A chave nunca vai para o repositório.
 
+O driver `fake` devolve os mesmos dados para qualquer endereço. Com o driver `solscan` e uma chave inválida, cada bloco da tela mostra uma mensagem amigável e o 401 é registrado no log.
+
 ## Decisões
 
 - **RN-09, 404 em vez de 403.** Conta ou carteira de outro usuário responde 404. Um 403 confirmaria que o recurso existe para quem tenta adivinhar ids. Toda consulta parte de `auth()->user()->accounts()`, e os ids guardados nos componentes Livewire são `#[Locked]`.
