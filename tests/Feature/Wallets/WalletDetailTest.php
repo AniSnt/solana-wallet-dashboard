@@ -34,7 +34,7 @@ function detailLink(Account $account, string $label): Wallet
     return $wallet;
 }
 
-it('shows balance, tokens and transactions to the owner', function () {
+it('mostra saldo, tokens e transações ao dono', function () {
     [$a, $accountA] = detailUser('52998224725');
     $wallet = detailLink($accountA, 'Main');
 
@@ -46,7 +46,7 @@ it('shows balance, tokens and transactions to the owner', function () {
         ->assertSee('2k5SKZo9tAgK3w24');
 });
 
-it('returns 404 for the wallet page of another user account', function () {
+it('retorna 404 na página da carteira de conta de outro usuário', function () {
     [, $accountA] = detailUser('52998224725');
     [$b] = detailUser('11144477735');
     $wallet = detailLink($accountA, 'A');
@@ -54,7 +54,7 @@ it('returns 404 for the wallet page of another user account', function () {
     $this->actingAs($b)->get(route('accounts.wallet', [$accountA, $wallet]))->assertNotFound();
 });
 
-it('returns 404 for a wallet not linked to the account, even knowing its id', function () {
+it('retorna 404 para carteira não vinculada à conta, mesmo sabendo o id', function () {
     [$a, $accountA] = detailUser('52998224725');
     [, $accountB] = detailUser('11144477735');
     $wallet = detailLink($accountB, 'B');
@@ -63,7 +63,7 @@ it('returns 404 for a wallet not linked to the account, even knowing its id', fu
     $this->actingAs($a)->get(route('accounts.wallet', [$accountB, $wallet]))->assertNotFound();
 });
 
-it('does not reveal the label of another account that shares the wallet', function () {
+it('não revela o label de outra conta que compartilha a carteira', function () {
     [$a, $accountA] = detailUser('52998224725');
     [, $accountB] = detailUser('11144477735');
     $wallet = detailLink($accountA, 'label-of-A');
@@ -75,7 +75,7 @@ it('does not reveal the label of another account that shares the wallet', functi
         ->assertDontSee('label-of-B');
 });
 
-it('keeps the other blocks working when one block fails', function () {
+it('mantém os outros blocos funcionando quando um bloco falha', function () {
     app()->bind(WalletDataProvider::class, fn () => new class(new FakeWalletDataProvider(new SolscanMapper, base_path('tests/Fixtures/solscan'))) implements WalletDataProvider
     {
         public function __construct(private FakeWalletDataProvider $inner) {}
@@ -106,7 +106,7 @@ it('keeps the other blocks working when one block fails', function () {
         ->assertSee('2k5SKZo9tAgK3w24');
 });
 
-it('loads more transactions using the cursor', function () {
+it('carrega mais transações usando o cursor', function () {
     [$a, $accountA] = detailUser('52998224725');
     $wallet = detailLink($accountA, 'Main');
 
@@ -120,7 +120,7 @@ it('loads more transactions using the cursor', function () {
         ->assertDontSee('Load more');
 });
 
-it('refresh bypasses the cache', function () {
+it('o refresh ignora o cache', function () {
     config(['wallet_data.driver' => 'solscan', 'wallet_data.solscan.api_key' => 'secret']);
 
     Http::fake([

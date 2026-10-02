@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 /*
@@ -48,3 +49,5 @@ function something()
 {
     // ..
 }
+
+pest()->beforeEach(fn () => Http::preventStrayRequests())->in('Feature');

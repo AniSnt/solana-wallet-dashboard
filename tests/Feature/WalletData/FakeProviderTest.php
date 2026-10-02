@@ -5,15 +5,15 @@ use App\WalletData\WalletDataProvider;
 
 const ADDRESS = '2YcwVbKx9L25Jpaj2vfWSXD5UKugZumWjzEe6suBUJi2';
 
-it('uses the fake driver by default', function () {
+it('usa o driver fake por padrão', function () {
     expect(app(WalletDataProvider::class))->toBeInstanceOf(FakeWalletDataProvider::class);
 });
 
-it('returns the balance in SOL from the fixture', function () {
+it('retorna o saldo em SOL a partir da fixture', function () {
     expect(app(WalletDataProvider::class)->balance(ADDRESS)->sol)->toBe('0.01193428');
 });
 
-it('returns tokens, including an amount larger than PHP_INT_MAX', function () {
+it('retorna tokens, inclusive uma quantidade maior que PHP_INT_MAX', function () {
     $tokens = app(WalletDataProvider::class)->tokens(ADDRESS);
 
     expect($tokens)->toHaveCount(2)
@@ -21,7 +21,7 @@ it('returns tokens, including an amount larger than PHP_INT_MAX', function () {
         ->and($tokens[1]->amount)->toBe('99999999999999.999999');
 });
 
-it('paginates transactions by cursor', function () {
+it('pagina as transações por cursor', function () {
     $provider = app(WalletDataProvider::class);
 
     $page1 = $provider->transactions(ADDRESS);

@@ -30,20 +30,20 @@ function linkWallet(User $user, Account $account, string $address, string $label
         ->call('link');
 }
 
-it('lets the owner open their own account wallets', function () {
+it('permite ao dono abrir as carteiras da própria conta', function () {
     [$a, $accountA] = makeUserWithPf('52998224725');
 
     $this->actingAs($a)->get(route('accounts.wallets', $accountA))->assertOk();
 });
 
-it('returns 404 when user B opens the wallets page of user A account', function () {
+it('retorna 404 quando o usuário B abre as carteiras da conta do usuário A', function () {
     [, $accountA] = makeUserWithPf('52998224725');
     [$b] = makeUserWithPf('11144477735');
 
     $this->actingAs($b)->get(route('accounts.wallets', $accountA))->assertNotFound();
 });
 
-it('does not let user B run Livewire actions on the account of user A', function () {
+it('não deixa o usuário B executar ações Livewire na conta do usuário A', function () {
     [, $accountA] = makeUserWithPf('52998224725');
     [$b] = makeUserWithPf('11144477735');
 
@@ -51,7 +51,7 @@ it('does not let user B run Livewire actions on the account of user A', function
         ->toThrow(ModelNotFoundException::class);
 });
 
-it('reuses the same wallet and keeps labels private between accounts', function () {
+it('reaproveita a mesma carteira e mantém os labels privados entre contas', function () {
     [$a, $accountA] = makeUserWithPf('52998224725');
     [$b, $accountB] = makeUserWithPf('11144477735');
 
@@ -69,7 +69,7 @@ it('reuses the same wallet and keeps labels private between accounts', function 
         ->assertDontSee('label-of-A');
 });
 
-it('does not show a wallet that is not linked to the user account', function () {
+it('não mostra carteira que não está vinculada à conta do usuário', function () {
     [$a, $accountA] = makeUserWithPf('52998224725');
     Wallet::create(['address' => SHARED_ADDRESS]);
 
@@ -78,7 +78,7 @@ it('does not show a wallet that is not linked to the user account', function () 
         ->assertDontSee(SHARED_ADDRESS);
 });
 
-it('rejects linking the same wallet twice to the same account', function () {
+it('rejeita vincular a mesma carteira duas vezes à mesma conta', function () {
     [$a, $accountA] = makeUserWithPf('52998224725');
 
     linkWallet($a, $accountA, SHARED_ADDRESS, '')->assertHasNoErrors();
@@ -87,7 +87,7 @@ it('rejects linking the same wallet twice to the same account', function () {
     expect($accountA->wallets()->count())->toBe(1);
 });
 
-it('rejects an invalid Solana address', function () {
+it('rejeita um endereço Solana inválido', function () {
     [$a, $accountA] = makeUserWithPf('52998224725');
 
     linkWallet($a, $accountA, 'abc', '')->assertHasErrors(['address']);
@@ -95,7 +95,7 @@ it('rejects an invalid Solana address', function () {
     expect(Wallet::count())->toBe(0);
 });
 
-it('unlinking from one account does not affect the other account', function () {
+it('desvincular de uma conta não afeta a outra conta', function () {
     [$a, $accountA] = makeUserWithPf('52998224725');
     [$b, $accountB] = makeUserWithPf('11144477735');
 

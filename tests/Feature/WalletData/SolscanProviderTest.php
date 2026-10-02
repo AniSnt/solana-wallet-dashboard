@@ -41,7 +41,7 @@ function solscanQuery(Request $request): array
 
 beforeEach(fn () => Http::preventStrayRequests());
 
-it('sends the token header and the right parameters to each endpoint', function () {
+it('envia o header token e os parâmetros certos em cada endpoint', function () {
     Http::fake([
         '*account/detail*' => Http::response(solscanFixture('account-detail.json')),
         '*account/token-accounts*' => Http::response(solscanFixture('token-accounts.json')),
@@ -66,7 +66,7 @@ it('sends the token header and the right parameters to each endpoint', function 
         && solscanQuery($r) == ['address' => SOLSCAN_TEST_ADDRESS, 'limit' => '10', 'before' => 'LAST-SIGNATURE']);
 });
 
-it('serves the second call from cache and bypasses it on refresh', function () {
+it('atende a segunda chamada pelo cache e o ignora no refresh', function () {
     Http::fake(['*account/detail*' => Http::response(solscanFixture('account-detail.json'))]);
 
     $provider = solscanProvider();
@@ -80,7 +80,7 @@ it('serves the second call from cache and bypasses it on refresh', function () {
     Http::assertSentCount(2);
 });
 
-it('shares the cache between callers of the same address', function () {
+it('compartilha o cache entre quem consulta o mesmo endereço', function () {
     Http::fake(['*account/detail*' => Http::response(solscanFixture('account-detail.json'))]);
 
     solscanProvider()->balance(SOLSCAN_TEST_ADDRESS);
@@ -89,7 +89,7 @@ it('shares the cache between callers of the same address', function () {
     Http::assertSentCount(1);
 });
 
-it('retries a transient 5xx and then succeeds', function () {
+it('repete um 5xx transitório e depois tem sucesso', function () {
     Http::fake(['*account/detail*' => Http::sequence()
         ->push(solscanFixture('error-500.json'), 500)
         ->push(solscanFixture('account-detail.json'), 200)]);
@@ -100,7 +100,7 @@ it('retries a transient 5xx and then succeeds', function () {
     Http::assertSentCount(2);
 });
 
-it('gives up after the attempt limit and raises a domain exception', function () {
+it('desiste após o limite de tentativas e lança exceção de domínio', function () {
     Http::fake(['*account/detail*' => Http::response(solscanFixture('error-500.json'), 500)]);
 
     expect(fn () => solscanProvider()->balance(SOLSCAN_TEST_ADDRESS))->toThrow(ProviderUnavailable::class);
@@ -108,7 +108,7 @@ it('gives up after the attempt limit and raises a domain exception', function ()
     Http::assertSentCount(3);
 });
 
-it('treats 429 as unavailable, does not retry and stops calling the API for a while', function () {
+it('trata 429 como indisponível, não repete e para de chamar a API por um tempo', function () {
     Http::fake(['*account/detail*' => Http::response(solscanFixture('error-429.json'), 429)]);
 
     $provider = solscanProvider();
@@ -119,7 +119,7 @@ it('treats 429 as unavailable, does not retry and stops calling the API for a wh
     Http::assertSentCount(1);
 });
 
-it('maps a 400 to InvalidAddress without retrying', function () {
+it('mapeia 400 para InvalidAddress sem repetir', function () {
     Http::fake(['*account/detail*' => Http::response(solscanFixture('error-400.json'), 400)]);
 
     expect(fn () => solscanProvider()->balance(SOLSCAN_TEST_ADDRESS))->toThrow(InvalidAddress::class);
@@ -127,7 +127,7 @@ it('maps a 400 to InvalidAddress without retrying', function () {
     Http::assertSentCount(1);
 });
 
-it('maps a 401 to a configuration error, logs it and does not retry', function () {
+it('mapeia 401 para erro de configuração, registra no log e não repete', function () {
     Log::spy();
     Http::fake(['*account/detail*' => Http::response(solscanFixture('error-401.json'), 401)]);
 
@@ -137,7 +137,7 @@ it('maps a 401 to a configuration error, logs it and does not retry', function (
     Log::shouldHaveReceived('error')->once();
 });
 
-it('turns a timeout into a domain exception', function () {
+it('transforma timeout em exceção de domínio', function () {
     Http::fake(function () {
         throw new ConnectionException('cURL error 28: Operation timed out');
     });
@@ -145,7 +145,7 @@ it('turns a timeout into a domain exception', function () {
     expect(fn () => solscanProvider()->balance(SOLSCAN_TEST_ADDRESS))->toThrow(ProviderUnavailable::class);
 });
 
-it('does not call the API without a key', function () {
+it('não chama a API sem chave', function () {
     Http::fake();
 
     expect(fn () => solscanProvider(key: null)->balance(SOLSCAN_TEST_ADDRESS))->toThrow(ProviderMisconfigured::class);

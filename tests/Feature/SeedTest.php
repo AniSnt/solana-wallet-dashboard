@@ -6,7 +6,7 @@ use Database\Seeders\DatabaseSeeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
-it('seeds the demo data required by the assignment', function () {
+it('cria os dados de demonstração exigidos pelo enunciado', function () {
     $this->seed(DatabaseSeeder::class);
 
     $user = User::where('email', 'demo@example.com')->firstOrFail();

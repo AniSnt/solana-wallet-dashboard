@@ -27,7 +27,7 @@ test('new users can register', function () {
     $this->assertAuthenticated();
 });
 
-test('registration creates the user and the PF account together', function () {
+test('o cadastro cria o usuário e a conta PF juntos', function () {
     Volt::test('auth.register')
         ->set('name', 'Test User')
         ->set('email', 'test@example.com')
@@ -43,7 +43,7 @@ test('registration creates the user and the PF account together', function () {
         ->and($account->document)->toBe('52998224725');
 });
 
-test('registration rejects an invalid CPF and persists nothing', function () {
+test('o cadastro rejeita CPF inválido e não grava nada', function () {
     Volt::test('auth.register')
         ->set('name', 'Test User')
         ->set('email', 'test@example.com')
@@ -57,7 +57,7 @@ test('registration rejects an invalid CPF and persists nothing', function () {
         ->and(Account::count())->toBe(0);
 });
 
-test('registration rejects a duplicated CPF', function () {
+test('o cadastro rejeita CPF duplicado', function () {
     $owner = User::factory()->create();
     $owner->accounts()->create([
         'type' => AccountType::Individual,
