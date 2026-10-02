@@ -33,4 +33,4 @@ O padrão é `SOLSCAN_DRIVER=fake`, que lê as fixtures de `tests/Fixtures/solsc
 - O índice parcial funciona em SQLite e PostgreSQL, mas não em MySQL, que precisaria de outra solução.
 - Produção: `APP_DEBUG=false`, PostgreSQL, Redis para o cache e o cooldown do 429, e rate limiting local nas chamadas ao Solscan.
 - Segurança: CPF e CNPJ ficam em texto no banco (criptografia em repouso por causa da LGPD), sem verificação de e-mail, 2FA ou log de auditoria.
-- CNPJ alfanumérico, metadados de token e link de contas no menu lateral.
+- CNPJ alfanumérico e metadados de token.
