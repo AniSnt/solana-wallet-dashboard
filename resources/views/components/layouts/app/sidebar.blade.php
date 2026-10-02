@@ -13,8 +13,8 @@
 
             <flux:navlist variant="outline">
                 <flux:navlist.group heading="Platform" class="grid">
-                    <flux:navlist.item icon="building-office" :href="route('accounts.index')" :current="request()->routeIs('accounts.*')" wire:navigate>Accounts</flux:navlist.item>
-                    <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>Dashboard</flux:navlist.item>
+                    <flux:navlist.item icon="building-office" :href="route('accounts.index')" :current="request()->routeIs('accounts.*')" wire:navigate>Contas</flux:navlist.item>
+                    <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>Painel</flux:navlist.item>
                 </flux:navlist.group>
             </flux:navlist>
 

@@ -112,8 +112,8 @@ new class extends Component {
     }
 }; ?>
 
-<div class="mx-auto flex w-full max-w-3xl flex-col gap-6 p-6">
-    <a href="{{ route('accounts.wallets', $accountId) }}" wire:navigate class="text-sm underline">&larr; Wallets</a>
+<div class="page">
+    <a href="{{ route('accounts.wallets', $accountId) }}" wire:navigate class="text-lg underline" aria-label="Voltar para as carteiras" title="Voltar para as carteiras">&larr;</a>
 
     <div>
         <h1 class="text-xl font-semibold">{{ $this->wallet->pivot->label ?? 'Wallet' }}</h1>

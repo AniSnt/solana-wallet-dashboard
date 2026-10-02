@@ -14,7 +14,7 @@ new class extends Component {
     public function accounts(): Collection
     {
         // Sempre parte do usuário logado, nunca de Account::all() (RN-09).
-        return auth()->user()->accounts()->orderByDesc('type')->orderBy('name')->get();
+        return auth()->user()->accounts()->withCount('wallets')->orderByDesc('type')->orderBy('name')->get();
     }
 
     public function createCompany(): void
@@ -39,27 +39,44 @@ new class extends Component {
     }
 }; ?>
 
-<div class="mx-auto flex w-full max-w-3xl flex-col gap-6 p-6">
-    <h1 class="text-xl font-semibold">Contas</h1>
+<div class="page">
+            <div class="page-heading">
+        <h1 class="text-2xl font-semibold">Contas</h1>
+        <p class="text-sm text-zinc-500">Cada conta tem suas próprias wallets Solana.</p>
+    </div>
 
-    <ul class="divide-y divide-zinc-200 dark:divide-zinc-700">
+    <div class="flex flex-col gap-3">
         @foreach ($this->accounts as $account)
-            <li class="flex items-center justify-between py-3">
-                <div>
-                    <p class="font-medium">{{ $account->name }}</p>
-                    <p class="text-sm text-zinc-500">
+            <div class="flex items-center justify-between rounded-xl border border-zinc-200 p-4 transition hover:border-indigo-500 dark:border-zinc-700">
+                <div class="flex items-center gap-4">
+                    <span class="rounded-full px-3 py-1 text-xs font-semibold {{ $account->type === AccountType::Individual ? 'bg-emerald-500/10 text-emerald-400' : 'bg-indigo-500/10 text-indigo-400' }}">
                         {{ $account->type === AccountType::Individual ? 'PF' : 'PJ' }}
-                        · {{ $account->maskedDocument() }}
-                    </p>
+                    </span>
+                    <div>
+                        <p class="font-medium">{{ $account->name }}</p>
+                        <p class="text-sm text-zinc-500">{{ $account->maskedDocument() }}</p>
+                    </div>
                 </div>
-                <a href="{{ route('accounts.wallets', $account) }}" wire:navigate class="text-sm underline">Wallets</a>
-            </li>
-        @endforeach
-    </ul>
 
-    <form wire:submit="createCompany" class="flex flex-col gap-4">
+                <div class="flex items-center gap-3">
+                    <span class="text-sm text-zinc-500">{{ $account->wallets_count }} {{ $account->wallets_count === 1 ? 'wallet' : 'wallets' }}</span>
+                    <flux:button size="sm" variant="primary" href="{{ route('accounts.wallets', $account) }}" wire:navigate>Wallets</flux:button>
+                </div>
+            </div>
+        @endforeach
+    </div>
+
+    <form wire:submit="createCompany" class="flex flex-col gap-4 rounded-xl border border-zinc-200 p-5 dark:border-zinc-700">
+                <div class="page-heading">
+            <h2 class="font-semibold">Nova conta PJ</h2>
+            <p class="text-sm text-zinc-500">Informe a razão social e o CNPJ, com ou sem máscara.</p>
+        </div>
+
         <flux:input wire:model="name" label="Razão social" type="text" required />
         <flux:input wire:model="cnpj" label="CNPJ" type="text" inputmode="numeric" placeholder="00.000.000/0000-00" required />
-        <flux:button type="submit" variant="primary">Criar conta PJ</flux:button>
+
+                <div class="flex justify-center">
+            <flux:button type="submit" variant="primary">Criar conta PJ</flux:button>
+        </div>
     </form>
 </div>

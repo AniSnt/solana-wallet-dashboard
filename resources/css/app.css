@@ -23,16 +23,16 @@
     --color-zinc-900: #171717;
     --color-zinc-950: #0a0a0a;
 
-    --color-accent: var(--color-neutral-800);
-    --color-accent-content: var(--color-neutral-800);
+    --color-accent: var(--color-indigo-600);
+    --color-accent-content: var(--color-indigo-600);
     --color-accent-foreground: var(--color-white);
 }
 
 @layer theme {
     .dark {
-        --color-accent: var(--color-white);
-        --color-accent-content: var(--color-white);
-        --color-accent-foreground: var(--color-neutral-800);
+        --color-accent: var(--color-indigo-500);
+        --color-accent-content: var(--color-indigo-400);
+        --color-accent-foreground: var(--color-white);
     }
 }
 
@@ -64,3 +64,19 @@ select:focus[data-flux-control] {
 /* \[:where(&)\]:size-4 {
     @apply size-4;
 } */
+
+@layer components {
+    .page {
+        @apply mx-auto flex w-full max-w-3xl flex-col gap-6 p-6;
+    }
+
+    .page-wide {
+        @apply mx-auto flex w-full max-w-5xl flex-col gap-8 p-6;
+    }
+}
+
+@layer components {
+    .page-heading {
+        @apply text-center;
+    }
+}

@@ -14,6 +14,7 @@ new class extends Component {
 
     public string $address = '';
     public string $label = '';
+    public string $status = '';
 
     public function mount(int $account): void
     {
@@ -46,7 +47,7 @@ new class extends Component {
         $wallet = Wallet::firstOrCreate(['address' => $validated['address']]);
 
         if ($account->wallets()->whereKey($wallet->id)->exists()) {
-            $this->addError('address', 'This wallet is already linked to this account');
+            $this->addError('address', 'Esta carteira já está vinculada a esta conta');
 
             return;
         }
@@ -54,6 +55,7 @@ new class extends Component {
         $account->wallets()->attach($wallet->id, ['label' => $validated['label'] ?: null]);
 
         $this->reset(['address', 'label']);
+        $this->status = 'Carteira vinculada.';
         unset($this->wallets);
     }
 
@@ -62,28 +64,38 @@ new class extends Component {
     {
         $this->account()->wallets()->detach($walletId);
 
+        $this->status = 'Carteira desvinculada.';
         unset($this->wallets);
     }
 }; ?>
 
-<div class="mx-auto flex w-full max-w-3xl flex-col gap-6 p-6">
-    <h1 class="text-xl font-semibold">Wallets</h1>
+<div class="page">
+    <a href="{{ route('accounts.index') }}" wire:navigate class="text-lg underline" aria-label="Voltar para contas" title="Voltar para contas">&larr;</a>
+
+<h1 class="text-xl font-semibold">Wallets</h1>
+
+    @if ($status)
+        <p class="text-sm text-green-500">{{ $status }}</p>
+    @endif
 
     <ul class="divide-y divide-zinc-200 dark:divide-zinc-700">
         @foreach ($this->wallets as $wallet)
             <li class="flex items-center justify-between py-3">
                 <div>
-    <p class="font-medium">{{ $wallet->pivot->label ?? '—' }}</p>
-    <a href="{{ route('accounts.wallet', [$accountId, $wallet]) }}" wire:navigate class="break-all text-sm text-zinc-500 underline">{{ $wallet->address }}</a>
-</div>
-                <flux:button size="sm" wire:click="unlink({{ $wallet->id }})">Unlink</flux:button>
+                    <p class="font-medium">{{ $wallet->pivot->label ?? '—' }}</p>
+                    <p class="break-all text-sm text-zinc-500">{{ $wallet->address }}</p>
+                </div>
+                <div class="flex gap-2">
+                    <flux:button size="sm" href="{{ route('accounts.wallet', [$accountId, $wallet]) }}" wire:navigate>Detalhes</flux:button>
+                    <flux:button size="sm" wire:click="unlink({{ $wallet->id }})" wire:confirm="Desvincular esta carteira da conta?">Desvincular</flux:button>
+                </div>
             </li>
         @endforeach
     </ul>
 
     <form wire:submit="link" class="flex flex-col gap-4">
-        <flux:input wire:model="address" label="Solana address" type="text" required />
-        <flux:input wire:model="label" label="Label (optional)" type="text" />
-        <flux:button type="submit" variant="primary">Link wallet</flux:button>
+        <flux:input wire:model="address" label="Endereço Solana" type="text" required />
+        <flux:input wire:model="label" label="Apelido (opcional)" type="text" />
+        <flux:button type="submit" variant="primary">Vincular carteira</flux:button>
     </form>
 </div>
