@@ -73,13 +73,9 @@ new class extends Component {
         @foreach ($this->wallets as $wallet)
             <li class="flex items-center justify-between py-3">
                 <div>
-                    
-                    <p class="font-medium">{{ $wallet->pivot->label ?? '—' }}</p>
-                   <a href="{{ route('accounts.wallet', [$accountId, $wallet]) }}"
-                    wire:navigate class="break-all text-sm text-zinc-500 underline">
-                    {{ $wallet->address }}</a> 
-
-                </div>
+    <p class="font-medium">{{ $wallet->pivot->label ?? '—' }}</p>
+    <a href="{{ route('accounts.wallet', [$accountId, $wallet]) }}" wire:navigate class="break-all text-sm text-zinc-500 underline">{{ $wallet->address }}</a>
+</div>
                 <flux:button size="sm" wire:click="unlink({{ $wallet->id }})">Unlink</flux:button>
             </li>
         @endforeach
